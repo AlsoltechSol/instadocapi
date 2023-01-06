@@ -14,11 +14,10 @@ class AuthController extends BaseController
 
     public function signin(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+        if(Auth::attempt(['mobile' => $request->mobile, 'otp' => $request->otp])){ 
             $authUser = Auth::user(); 
             $success['token'] =  $authUser->createToken('MyAuthApp')->plainTextToken; 
             $success['name'] =  $authUser->name;
-   
             return $this->sendResponse($success, 'User signed in');
         } 
         else{ 
@@ -29,23 +28,38 @@ class AuthController extends BaseController
     public function signup(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
+            'role' => 'required',
+            'mobile' => 'required',
+            'otp' => 'required' 
         ]);
-   
         if($validator->fails()){
             return $this->sendError('Error validation', $validator->errors());       
         }
-   
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;
-        $success['name'] =  $user->name;
-   
-        return $this->sendResponse($success, 'User created successfully.');
+        $user_exists = User::where('mobile',$request['mobile'])->first();
+        // dd($user_exists);
+
+        if(!isset($user_exists))
+        {
+            $input = $request->all();
+            $user = User::create($input);
+            $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;
+            $success['name'] =  $user->name;
+            return $this->sendResponse($success, 'User created successfully.');
+        }
+        else{
+            $otp_exists = otp::where('mobile',$request['mobile'])->first();
+            if(!$otp_exists){
+                $success['msg'] =  "Request for OTP";
+                return $this->sendResponse($success, 'Login failed');
+            }
+            $authUser = User::where('mobile',$request['mobile'])->first();
+            $success['token'] =  $authUser->createToken('MyAuthApp')->plainTextToken; 
+            $success['name'] =  $authUser->name;
+            return $this->sendResponse($success, 'User signed in');
+
+        }
+
+
     }
 
     public function sendotp(Request $request)
@@ -65,6 +79,9 @@ class AuthController extends BaseController
         // return $input;
         $user = otp::create($input);
         $success['otp'] =  $user->otp;
+        $success['mobile'] =  $user->mobile;
+        $success['role'] =  $user->role;
+
    
         return $this->sendResponse($success, 'OTP sent successfully.');
 
