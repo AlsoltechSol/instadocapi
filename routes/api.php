@@ -19,6 +19,8 @@ use App\Http\Controllers\API\BaseController;
 Route::post('login', [AuthController::class, 'signin']);
 Route::post('sendotp', [AuthController::class, 'sendotp']);
 Route::post('register', [AuthController::class, 'signup']);
+// Route::get('test', [AuthController::class, 'test']);
+
 
 
 

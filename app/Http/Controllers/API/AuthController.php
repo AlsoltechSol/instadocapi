@@ -86,4 +86,11 @@ class AuthController extends BaseController
         return $this->sendResponse($success, 'OTP sent successfully.');
 
     }
+
+    public function test()
+    {
+        $success['msg'] =  "Hi";
+        return $this->sendResponse($success, 'Success');
+
+    }
 }

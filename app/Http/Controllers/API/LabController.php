@@ -6,6 +6,8 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Resources\Lab as LabResource;
+use App\Http\Resources\Patient as PatientResource;
+
 use App\Models\Labtest;
 
 class LabController extends BaseController
@@ -17,7 +19,9 @@ class LabController extends BaseController
      */
     public function index()
     {
-        //
+        $id = auth()->user()->id;
+        $labtests = Labtest::where('user_id',$id)->get();
+        return $this->sendResponse(LabResource::collection($labtests), 'Details fetched.');
     }
 
     /**
