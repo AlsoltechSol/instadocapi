@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\LabController;
+use App\Http\Controllers\API\TestcenterController;
 use App\Http\Controllers\API\BaseController;
 
 
@@ -27,4 +28,5 @@ Route::post('register', [AuthController::class, 'signup']);
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('patients', PatientController::class);
     Route::resource('labtest', LabController::class);
+    Route::resource('testcenters', TestcenterController::class);
 });
