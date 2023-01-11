@@ -7,6 +7,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\LabController;
 use App\Http\Controllers\API\TestcenterController;
+use App\Http\Controllers\API\AttachmentController;
 use App\Http\Controllers\API\BaseController;
 
 
@@ -29,4 +30,5 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('patients', PatientController::class);
     Route::resource('labtest', LabController::class);
     Route::resource('testcenters', TestcenterController::class);
+    Route::resource('attachments', AttachmentController::class);
 });
