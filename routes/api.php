@@ -8,6 +8,7 @@ use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\LabController;
 use App\Http\Controllers\API\TestcenterController;
 use App\Http\Controllers\API\AttachmentController;
+use App\Http\Controllers\API\MedicineorderController;
 use App\Http\Controllers\API\BaseController;
 
 
@@ -21,7 +22,7 @@ use App\Http\Controllers\API\BaseController;
 Route::post('login', [AuthController::class, 'signin']);
 Route::post('sendotp', [AuthController::class, 'sendotp']);
 Route::post('register', [AuthController::class, 'signup']);
-// Route::get('test', [AuthController::class, 'test']);
+Route::get('test', [AuthController::class, 'test']);
 
 
 
@@ -31,4 +32,5 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('labtest', LabController::class);
     Route::resource('testcenters', TestcenterController::class);
     Route::resource('attachments', AttachmentController::class);
+    Route::resource('medicine-order', MedicineorderController::class);
 });

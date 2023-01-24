@@ -24,3 +24,4 @@ class Attachment extends JsonResource
         ];
     }
 }
+

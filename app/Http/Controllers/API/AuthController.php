@@ -56,6 +56,7 @@ class AuthController extends BaseController
             $authUser = User::where('mobile',$request['mobile'])->first();
             $success['token'] =  $authUser->createToken('MyAuthApp')->plainTextToken; 
             $success['name'] =  $authUser->name;
+            $success['role'] =  $authUser->role;
             $success['patient_details'] = $authUser->Patient;
 
             return $this->sendResponse($success, 'User signed in');

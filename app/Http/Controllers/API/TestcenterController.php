@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Testcenter;
-use App\Http\Resources\Testcenter as TestcenterResource;
+use App\Http\Resources\TestCenter as TestcenterResource;
 
 
 

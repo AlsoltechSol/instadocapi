@@ -61,7 +61,6 @@ class PatientController extends BaseController
         $input['user_id'] = $id;
         $patient = Patient::create($input);
         return $this->sendResponse(new PatientResource($patient), 'Patient Details Added Successfully.');
-        // return "hi"
     }
 
     /**

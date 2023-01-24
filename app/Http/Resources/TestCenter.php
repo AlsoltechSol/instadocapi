@@ -22,6 +22,7 @@ class TestCenter extends JsonResource
             'contactno' => $this->contactno,
             'emailaddress' => $this->contactno,
             'contactperson' => $this->contactperson,
+            'collect_center_from_home_flag' => $this->collect_center_from_home_flag,
             'created_at' => $this->created_at->format('m/d/Y'),
             'updated_at' => $this->updated_at->format('m/d/Y'),
         ];
