@@ -32,5 +32,8 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('labtest', LabController::class);
     Route::resource('testcenters', TestcenterController::class);
     Route::resource('attachments', AttachmentController::class);
+    Route::post('/patient_request/{type}', [App\Http\Controllers\API\PatientRequestController::class, 'store']);
+    Route::get('/patient_request', [App\Http\Controllers\API\PatientRequestController::class, 'index']);
+    Route::post('/user_feedback', [App\Http\Controllers\API\UserFeedBackController::class, 'store']);
     Route::resource('medicine-order', MedicineorderController::class);
 });
