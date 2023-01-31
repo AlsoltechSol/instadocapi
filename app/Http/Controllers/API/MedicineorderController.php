@@ -24,16 +24,7 @@ class MedicineorderController extends BaseController
         return $this->sendResponse(MedicineResource::collection($orders), 'Details fetched.');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
+  
     /**
      * Store a newly created resource in storage.
      *
@@ -53,20 +44,17 @@ class MedicineorderController extends BaseController
             if($validator->fails()){
                 return $this->sendError($validator->errors());       
             }
-
 //            dd($request);
-
             $id = auth()->user()->id;
             $input['user_id'] = $id;
+            $input['order_status'] = 'Pending';
             $fileName = time() . '_' . $request->file('prescription')->getClientOriginalName();
             $filePath = str_replace('\\', '/', public_path("assets/medicineorderuploads/prescription/"));
             $request->file('prescription')->move($filePath, $fileName);
             $input['prescription'] =  $fileName;
             $medicine = Medicineorder::create($input);
-            return $this->sendResponse(new MedicineResource($medicine), 'Medicine Order Added Successfully.');
-              
+            return $this->sendResponse(new MedicineResource($medicine), 'Medicine Order Added Successfully.');            
     }
-
     /**
      * Display the specified resource.
      *
@@ -83,24 +71,7 @@ class MedicineorderController extends BaseController
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function update(Request $request, $id)
     {
         //
@@ -115,5 +86,16 @@ class MedicineorderController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+    public function cancel(Medicineorder $medicineorder)
+    {
+        $medicineorder->order_status = 'Cancelled';
+        $medicineorder->save();
+
+        return response()->json([
+            'meassage' => 'Order has been cancelled succesfully!',
+            'data' => $medicineorder
+        ]);
     }
 }

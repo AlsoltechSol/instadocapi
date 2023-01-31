@@ -36,4 +36,6 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/patient_request', [App\Http\Controllers\API\PatientRequestController::class, 'index']);
     Route::post('/user_feedback', [App\Http\Controllers\API\UserFeedBackController::class, 'store']);
     Route::resource('medicine-order', MedicineorderController::class);
+    Route::put('/medicine-order-cancel/{medicineorder}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
+    Route::put('/labtest-cancel/{labtest}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
 });

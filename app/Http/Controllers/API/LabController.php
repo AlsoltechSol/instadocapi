@@ -57,6 +57,8 @@ class LabController extends BaseController
 
         $id = auth()->user()->id;
         $input['user_id'] = $id;
+        $input['order_status'] = 'Pending';
+       
         $fileName = time() . '_' . $request->file('prescription')->getClientOriginalName();
         $filePath = str_replace('\\', '/', public_path("assets/labtestsuploads/prescription/"));
         $request->file('prescription')->move($filePath, $fileName);
@@ -110,5 +112,16 @@ class LabController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+    public function cancel(Labtest $labtest)
+    {
+        $labtest->order_status = 'Cancelled';
+        $labtest->save();
+
+        return response()->json([
+            'meassage' => 'Labtest has been cancelled succesfully!',
+            'data' => $labtest
+        ]);
     }
 }
