@@ -62,6 +62,8 @@ class LabController extends BaseController
 
         $id = auth()->user()->id;
         $input['user_id'] = $id;
+        $input['order_status'] = 'Pending';
+       
         $fileName = time() . '_' . $request->file('prescription')->getClientOriginalName();
         $filePath = str_replace('\\', '/', public_path("assets/labtestsuploads/prescription/"));
         $request->file('prescription')->move($filePath, $fileName);
@@ -117,6 +119,7 @@ class LabController extends BaseController
         //
     }
 
+
     public function getAllAddress()
     {
         $id = auth()->user()->id;
@@ -142,6 +145,18 @@ class LabController extends BaseController
         $input['user_id'] = $id;
         $add = DeliveryAddress::create($input);
         return $this->sendResponse(new AddressResource($add), 'Address Added Successfully.');
+    }
+
+
+    public function cancel(Labtest $labtest)
+    {
+        $labtest->order_status = 'Cancelled';
+        $labtest->save();
+
+        return response()->json([
+            'meassage' => 'Labtest has been cancelled succesfully!',
+            'data' => $labtest
+        ]);
     }
 
 }

@@ -38,4 +38,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('medicine-order', MedicineorderController::class);
     Route::get('/get-address', [App\Http\Controllers\API\LabController::class, 'getAllAddress']);
     Route::post('/add-delivery-address', [App\Http\Controllers\API\LabController::class, 'addAddress']);
+    Route::put('/medicine-order-cancel/{medicineorder}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
+    Route::put('/labtest-cancel/{labtest}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
 });
+
