@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Lab extends JsonResource
+class Address extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,16 +16,16 @@ class Lab extends JsonResource
     {
         return [
             'id' => $this->id,
-            'test_name' => $this->test_name,
-            'payment_mode' => $this->payment_mode,
-            'date_of_test' => $this->date_of_test,
-            'prescription_exists_flag' => $this->prescription_exists_flag,
-            'prescription' => $this->prescription,
-            'user_id' => $this->user_id,
-            'address' => $this->address,
-            'collect_sample_from_home_flag' => $this ->collect_sample_from_home_flag,
+            'address1' => $this->address1,
+            'address2' => $this->address2,
+            'country' => $this->country,
+            'state' => $this->state,
+            'city' => $this->city,
+            'zip' => $this->zip,
+            'complete_address' => $this->address1.$this->address2.$this->country.$this->state.$this->city.$this->zip,
             'created_at' => $this->created_at->format('m/d/Y'),
             'updated_at' => $this->updated_at->format('m/d/Y'),
         ];
     }
 }
+

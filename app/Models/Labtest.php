@@ -15,6 +15,8 @@ class Labtest extends Model
         'date_of_test',
         'prescription_exists_flag',
         'prescription',
-        'user_id'
+        'user_id',
+        'address',
+        'collect_sample_from_home_flag'
     ];
 }
