@@ -129,7 +129,6 @@ class LabController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'address1' => 'required',
-            'address2' => 'required',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',

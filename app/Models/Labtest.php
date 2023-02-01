@@ -17,6 +17,7 @@ class Labtest extends Model
         'prescription',
         'user_id',
         'address',
-        'collect_sample_from_home_flag'
+        'collect_sample_from_home_flag',
+        'labcenter_id'
     ];
 }
