@@ -11,5 +11,5 @@ class UserFeedback extends Model
 
     protected $guarded = [];
 
-    protected $table = 'user_feedbacks'
+    protected $table = 'user_feedbacks';
 }
