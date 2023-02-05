@@ -22,6 +22,8 @@ class Lab extends JsonResource
             'prescription_exists_flag' => $this->prescription_exists_flag,
             'prescription' => $this->prescription,
             'user_id' => $this->user_id,
+            'address' => $this->address,
+            'collect_sample_from_home_flag' => $this ->collect_sample_from_home_flag,
             'created_at' => $this->created_at->format('m/d/Y'),
             'updated_at' => $this->updated_at->format('m/d/Y'),
         ];

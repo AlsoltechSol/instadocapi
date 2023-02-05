@@ -63,12 +63,33 @@ class MedicineorderController extends BaseController
      */
     public function show($id)
     {
-        $order = Medicineorder::find($id);
+        $order = Medicineorder::select(
+        "medicine_orders.id",
+        "prescription",
+        "cost",
+        "due_date",
+        "order_status",
+        "patient_id",
+        "payment_mode",
+        "have_prescription",
+        "medicine_orders.created_at",
+        "medicine_orders.updated_at",
+        "medicine_orders.user_id",
+        "course_duration",
+        "address1",
+        "address2",
+        "country",
+        "state",
+        "city",
+        "zip"
+        )->where('medicine_orders.id',$id)->join('delivery_addresses','delivery_addresses.id','=','medicine_orders.address')->first();
+        // return $order;
+
         if (is_null($order)) {
             return $this->sendError('Order does not exist.');
         }
         return $this->sendResponse(new MedicineResource($order), 'Medicine Order Added Successfully.');
-
+// return $order;
     }
 
    

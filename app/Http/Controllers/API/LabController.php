@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Resources\Lab as LabResource;
 use App\Http\Resources\Patient as PatientResource;
-
+use App\Http\Resources\Address as AddressResource;
 use App\Models\Labtest;
+use App\Models\DeliveryAddress;
+
 
 class LabController extends BaseController
 {
@@ -114,6 +116,34 @@ class LabController extends BaseController
         //
     }
 
+
+    public function getAllAddress()
+    {
+        $id = auth()->user()->id;
+        $address = DeliveryAddress::where('user_id',$id)->get();
+        return($address);
+    }
+
+    public function addAddress(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'address1' => 'required',
+            'country' => 'required',
+            'state' => 'required',
+            'city' => 'required',
+            'zip' => 'required',
+        ]);
+        if($validator->fails()){
+            return $this->sendError($validator->errors());       
+        }
+        $id = auth()->user()->id;
+        $input['user_id'] = $id;
+        $add = DeliveryAddress::create($input);
+        return $this->sendResponse(new AddressResource($add), 'Address Added Successfully.');
+    }
+
+
     public function cancel(Labtest $labtest)
     {
         $labtest->order_status = 'Cancelled';
@@ -124,4 +154,5 @@ class LabController extends BaseController
             'data' => $labtest
         ]);
     }
+
 }
