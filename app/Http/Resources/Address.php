@@ -12,6 +12,7 @@ class Address extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+
     public function toArray($request)
     {
         return [
@@ -22,9 +23,9 @@ class Address extends JsonResource
             'state' => $this->state,
             'city' => $this->city,
             'zip' => $this->zip,
-            'complete_address' => $this->address1.$this->address2.$this->country.$this->state.$this->city.$this->zip,
-            'created_at' => $this->created_at->format('m/d/Y'),
-            'updated_at' => $this->updated_at->format('m/d/Y'),
+            'complete_address' => $this->address1.",".$this->address2.",".$this->country.",".$this->state.",".$this->city.",".$this->zip,
+            // 'created_at' => $this->created_at->format('m/d/Y'),
+            // 'updated_at' => $this->updated_at->format('m/d/Y'),
         ];
     }
 }

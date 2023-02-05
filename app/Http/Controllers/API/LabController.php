@@ -44,9 +44,6 @@ class LabController extends BaseController
      */
     public function store(Request $request)
     {
-
-
-        // return $request;
         // $request->hasFile('prescription');
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -54,7 +51,7 @@ class LabController extends BaseController
             'payment_mode' => 'required',
             'date_of_test' => 'required',
             'prescription_exists_flag' => 'required',
-            'prescription' => 'required'
+            'prescription' => 'required',
         ]);
         if($validator->fails()){
             return $this->sendError($validator->errors());       
