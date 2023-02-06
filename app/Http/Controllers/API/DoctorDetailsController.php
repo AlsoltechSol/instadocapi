@@ -61,8 +61,7 @@ class DoctorDetailsController extends BaseController
 // --      treatment_type  -> treatment_type
 
 
-        $input = $request->all();
-        
+        $input = $request->all();        
         $validator = Validator::make($input, [
             'name' => 'required',
             'email' => 'required',
@@ -109,12 +108,19 @@ class DoctorDetailsController extends BaseController
      */
     public function show($id)
     {
-        // $id = auth()->user()->id;
+        $email = auth()->user()->email;
+        $mobile = auth()->user()->mobile;
+        $image = auth()->user()->image;
+
         $doctor = Doctor::where('user_id',$id)->first();
+        $doctor['email'] = $email;
+        $doctor['mobile'] = $mobile;
+        $doctor['image'] = $image;
 
-        // return $doctor;
 
-        return $doctor->User();
+        return $doctor;
+
+        // return $doctor->User();
 
         if (is_null($doctor)) {
             return $this->sendError('Doctor does not exist.');
