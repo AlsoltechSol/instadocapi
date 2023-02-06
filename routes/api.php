@@ -10,6 +10,7 @@ use App\Http\Controllers\API\TestcenterController;
 use App\Http\Controllers\API\AttachmentController;
 use App\Http\Controllers\API\MedicineorderController;
 use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\API\DoctorDetailsController;
 
 
   
@@ -40,5 +41,6 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/add-delivery-address', [App\Http\Controllers\API\LabController::class, 'addAddress']);
     Route::put('/medicine-order-cancel/{medicineorder}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
     Route::put('/labtest-cancel/{labtest}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
+    Route::resource('doctor/details', DoctorDetailsController::class);
 });
 
