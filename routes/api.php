@@ -42,5 +42,12 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::put('/medicine-order-cancel/{medicineorder}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
     Route::put('/labtest-cancel/{labtest}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
     Route::resource('doctor/details', DoctorDetailsController::class);
+
+
+
+    Route::post('/add-city', [App\Http\Controllers\API\CityController::class, 'store']);
+    Route::post('/add-specialization', [App\Http\Controllers\API\CityController::class, 'specializationStore']);
+    Route::post('/add-hospital', [App\Http\Controllers\API\CityController::class, 'hospitalStore']);
+
 });
 
