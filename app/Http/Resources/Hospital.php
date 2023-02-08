@@ -19,11 +19,11 @@ class Hospital extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'location' => $this->location,
-            'city' => $this->city,
-            'country' => $this->country,           
-            'created_at' => $this->created_at->format('m/d/Y'),
-            'updated_at' => $this->updated_at->format('m/d/Y'),
+            // 'location' => $this->location,
+            // 'city' => $this->city,
+            // 'country' => $this->country,           
+            // 'created_at' => $this->created_at->format('m/d/Y'),
+            // 'updated_at' => $this->updated_at->format('m/d/Y'),
         ];
     }
 }

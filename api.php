@@ -10,7 +10,6 @@ use App\Http\Controllers\API\TestcenterController;
 use App\Http\Controllers\API\AttachmentController;
 use App\Http\Controllers\API\MedicineorderController;
 use App\Http\Controllers\API\BaseController;
-use App\Http\Controllers\API\DoctorDetailsController;
 
 
   
@@ -41,16 +40,5 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/add-delivery-address', [App\Http\Controllers\API\LabController::class, 'addAddress']);
     Route::put('/medicine-order-cancel/{medicineorder}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
     Route::put('/labtest-cancel/{labtest}', [App\Http\Controllers\API\MedicineorderController::class, 'cancel']);
-    Route::resource('doctor/details', DoctorDetailsController::class);
-
-
-
-    Route::post('/add-city', [App\Http\Controllers\API\CityController::class, 'store']);
-    Route::post('/add-specialization', [App\Http\Controllers\API\CityController::class, 'specializationStore']);
-    Route::post('/add-hospital', [App\Http\Controllers\API\CityController::class, 'hospitalStore']);
-    Route::get('/hospital', [App\Http\Controllers\API\CityController::class, 'hospitalList']);
-    Route::get('/specialization', [App\Http\Controllers\API\CityController::class, 'specializationList']);
-    Route::get('/city-list', [App\Http\Controllers\API\CityController::class, 'cityList']);
-
 });
 
