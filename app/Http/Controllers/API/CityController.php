@@ -112,6 +112,43 @@ class CityController extends BaseController
         //
     }
 
+
+    public function hospitalList()
+    {
+        $hospital = Hospital::all();
+        if (is_null($hospital)) {
+            return $this->sendError('Hospital details does not exist.');
+        }
+        return $this->sendResponse(HospitalResource::collection($hospital), 'hospital Lists.');
+
+        // return $this->sendResponse(new HospitalResource($hospital), 'Hospital details fetched.');
+
+    }
+
+    public function cityList()
+    {
+        $city = City::all();
+        if (is_null($city)) {
+            return $this->sendError('City details does not exist.');
+        }
+        return $this->sendResponse(CityResource::collection($city), 'City Lists.');
+
+        // return $this->sendResponse(new HospitalResource($hospital), 'Hospital details fetched.');
+
+    }
+
+    public function specializationList()
+    {
+        $specialization = Specialization::all();
+        if (is_null($specialization)) {
+            return $this->sendError('specialization details does not exist.');
+        }
+        return $this->sendResponse(SpecializationResource::collection($specialization), 'specialization Lists.');
+
+        // return $this->sendResponse(new HospitalResource($hospital), 'Hospital details fetched.');
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
