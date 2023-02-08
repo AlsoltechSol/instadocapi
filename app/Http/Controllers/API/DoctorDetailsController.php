@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\Doctor;
 use App\Models\User;
-
-
+use App\Models\DoctorCity;
+use App\Models\DoctorHospital;
+use App\Models\DoctorSpecialization;
 
 
 class DoctorDetailsController extends BaseController
@@ -61,7 +62,9 @@ class DoctorDetailsController extends BaseController
 // --      treatment_type  -> treatment_type
 
 
-        $input = $request->all();        
+        $input = $request->all(); 
+        
+       //dd( $input);
         $validator = Validator::make($input, [
             'name' => 'required',
             'email' => 'required',
@@ -93,9 +96,37 @@ class DoctorDetailsController extends BaseController
          }
 
         $doctor = Doctor::create($input);
+         $cities = explode(',',$request->city);
+         $hospitals = explode(',',$request->hospital);
+         $specializations = explode(',',$request->specialization);
 
 
+        //  dd($hospitals);
+        if($doctor)
+        {
+            foreach($cities as $city){
+            $cityObj = new DoctorCity();
+            $cityObj->doctor_id = $doctor->id;
+            $cityObj->city_id = $city;
+            $cityObj->save();
+            }
 
+            foreach($hospitals as $hospital){
+                $hospitalObj = new DoctorHospital();
+                $hospitalObj->doctor_id = $doctor->id;
+                $hospitalObj->hospital_id = $hospital;
+                $hospitalObj->save();
+                }
+
+                foreach($specializations as $specialization){
+                    $specialObj = new DoctorSpecialization();
+                    $specialObj->doctor_id = $doctor->id;
+                    $specialObj->specialization_id = $specialization;
+                    $specialObj->save();
+                    }
+
+        }
+    
         return $this->sendResponse(new DoctorResource($doctor), 'Doctor Details Added Successfully.');
 
     }
