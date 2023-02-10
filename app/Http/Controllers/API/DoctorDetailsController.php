@@ -22,7 +22,11 @@ class DoctorDetailsController extends BaseController
      */
     public function index()
     {
-        //
+
+        $id = auth()->user()->id;
+        $attachments = Doctor::where('user_id',$id)->get();
+        return $this->sendResponse(DoctorResource::collection($attachments), 'Doctors Lists.');
+        
     }
 
     /**
@@ -116,12 +120,8 @@ class DoctorDetailsController extends BaseController
         $doctor['email'] = $email;
         $doctor['mobile'] = $mobile;
         $doctor['image'] = $image;
-
-
         return $doctor;
-
         // return $doctor->User();
-
         if (is_null($doctor)) {
             return $this->sendError('Doctor does not exist.');
         }
