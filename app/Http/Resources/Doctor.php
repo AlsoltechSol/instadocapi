@@ -25,7 +25,7 @@ class Doctor extends JsonResource
             'fees' => $this->fees,
             'doctor_registration_no' => $this->doctor_registration_no,
             'treatment_type' => $this->id,
-            'image' => $this->image,
+            'image' => "/assets/patient/attachments/".$this->image,
             'about' => $this->about,
 
             'created_at' => $this->created_at->format('m/d/Y'),
