@@ -26,6 +26,15 @@ class DoctorDetailsController extends BaseController
         //
     }
 
+    public function doctorList()
+    {
+        $doctor = Doctor::all();
+        if (is_null($doctor)) {
+            return $this->sendError('doctor details does not exist.');
+        }
+        return $this->sendResponse(DoctorResource::collection($doctor), 'doctor Lists.');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -73,7 +82,9 @@ class DoctorDetailsController extends BaseController
             'education' => 'required',
             'fees' => 'required',
             'doctor_registration_no' => 'required',
-            'treatment_type' => 'required'
+            'treatment_type' => 'required',
+            'image' => 'required',
+
         ]);
 
         unset($input["email"]);

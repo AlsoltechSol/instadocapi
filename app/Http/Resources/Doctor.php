@@ -27,7 +27,7 @@ class Doctor extends JsonResource
             'treatment_type' => $this->id,
             'image' => "/assets/patient/attachments/".$this->image,
             'about' => $this->about,
-
+            'user_id' => $this->user_id,
             'created_at' => $this->created_at->format('m/d/Y'),
             'updated_at' => $this->updated_at->format('m/d/Y'),
         ];
