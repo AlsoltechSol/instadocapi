@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/hospital', [App\Http\Controllers\API\CityController::class, 'hospitalList']);
     Route::get('/specialization', [App\Http\Controllers\API\CityController::class, 'specializationList']);
     Route::get('/city-list', [App\Http\Controllers\API\CityController::class, 'cityList']);
+    Route::get('/symptoms-list', [App\Http\Controllers\API\CityController::class, 'symptomsList']);
 
 });
 
