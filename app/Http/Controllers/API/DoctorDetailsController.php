@@ -23,7 +23,11 @@ class DoctorDetailsController extends BaseController
      */
     public function index()
     {
-        //
+
+        $id = auth()->user()->id;
+        $attachments = Doctor::where('user_id',$id)->get();
+        return $this->sendResponse(DoctorResource::collection($attachments), 'Doctors Lists.');
+        
     }
 
     /**
@@ -143,6 +147,7 @@ class DoctorDetailsController extends BaseController
         $mobile = auth()->user()->mobile;
         $image = auth()->user()->image;
 
+
         $doctor = Doctor::where('user_id',$id)->latest()->first();
         // dd($doctor);
         // $doctor['email'] = $email;
@@ -152,8 +157,8 @@ class DoctorDetailsController extends BaseController
 
        // return $doctor;
 
-        // return $doctor->User();
 
+        // return $doctor->User();
         if (is_null($doctor)) {
             return $this->sendError('Doctor does not exist.');
         }
