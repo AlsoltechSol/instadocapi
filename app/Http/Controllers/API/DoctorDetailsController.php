@@ -143,13 +143,14 @@ class DoctorDetailsController extends BaseController
         $mobile = auth()->user()->mobile;
         $image = auth()->user()->image;
 
-        $doctor = Doctor::where('user_id',$id)->first();
-        $doctor['email'] = $email;
-        $doctor['mobile'] = $mobile;
-        $doctor['image'] = $image;
+        $doctor = Doctor::where('user_id',$id)->latest()->first();
+        // dd($doctor);
+        // $doctor['email'] = $email;
+        // $doctor['mobile'] = $mobile;
+        // $doctor['image'] = $image;
 
 
-        return $doctor;
+       // return $doctor;
 
         // return $doctor->User();
 
