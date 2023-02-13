@@ -9,11 +9,15 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Specialization;
 use App\Models\Hospital;
+use App\Models\Symptom;
+
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\City as CityResource;
 use App\Http\Resources\Specialization as SpecializationResource;
 use App\Http\Resources\Hospital as HospitalResource;
+use App\Http\Resources\Symptom as SymptomResource;
+
 
 
 use Validator;
@@ -144,6 +148,18 @@ class CityController extends BaseController
             return $this->sendError('specialization details does not exist.');
         }
         return $this->sendResponse(SpecializationResource::collection($specialization), 'specialization Lists.');
+
+        // return $this->sendResponse(new HospitalResource($hospital), 'Hospital details fetched.');
+
+    }
+
+    public function symptomsList()
+    {
+        $symptoms = Symptom::all();
+        if (is_null($symptoms)) {
+            return $this->sendError('Symptoms details does not exist.');
+        }
+        return $this->sendResponse(SymptomResource::collection($symptoms), 'Symptoms Lists.');
 
         // return $this->sendResponse(new HospitalResource($hospital), 'Hospital details fetched.');
 

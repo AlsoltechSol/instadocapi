@@ -19,7 +19,8 @@ class Doctor extends Model
         'doctor_registration_no',
         'treatment_type',
         'image',
-        'user_id'
+        'user_id',
+        'about'
     ];
 
     public function User(){
