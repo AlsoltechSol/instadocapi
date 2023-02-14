@@ -56,6 +56,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
 
     Route::get('/doctorAppointment-list', [App\Http\Controllers\API\DoctorDetailsController::class, 'appointmentList']);
+    Route::post('/filterBy', [App\Http\Controllers\API\DoctorDetailsController::class, 'filterBy']);
 
 });
 
