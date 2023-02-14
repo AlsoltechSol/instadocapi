@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\Doctor as DoctorResource;
+use App\Http\Resources\Appointment as AppointmentResource;
+
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\Doctor;
@@ -12,7 +14,8 @@ use App\Models\User;
 use App\Models\DoctorCity;
 use App\Models\DoctorHospital;
 use App\Models\DoctorSpecialization;
-
+use App\Models\Appointment;
+use Carbon\Carbon;
 
 class DoctorDetailsController extends BaseController
 {
@@ -208,5 +211,29 @@ class DoctorDetailsController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+
+    public function appointmentList()
+    {
+        $todayDate = Carbon::today();
+
+        
+        $appointment_upcoming = Appointment::select(
+            'appointments.*',
+            'doctors.name',
+            'slots.date',
+            'slots.start_time',
+            'slots.end_time',
+            'slots.weekday',
+
+        )
+        ->join('doctors','doctors.id','=','appointments.doctor_id')
+        ->join('slots','slots.id','=','appointments.slot_id')
+        ->orderBy('id', 'DESC')
+        ->get();
+        return $this->sendResponse(AppointmentResource::collection($appointment_upcoming), 'Upcoming Doctors Appointment Lists.');
+
+
     }
 }
