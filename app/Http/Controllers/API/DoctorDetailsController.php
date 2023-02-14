@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\Doctor as DoctorResource;
 use App\Http\Resources\Appointment as AppointmentResource;
+use App\Http\Resources\FilterDoctor as FilterDoctorResource;
+
 
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -14,6 +16,8 @@ use App\Models\User;
 use App\Models\DoctorCity;
 use App\Models\DoctorHospital;
 use App\Models\DoctorSpecialization;
+use App\Models\DoctorSymptom;
+
 use App\Models\Appointment;
 use Carbon\Carbon;
 
@@ -117,6 +121,8 @@ class DoctorDetailsController extends BaseController
          $cities = explode(',',$request->city);
          $hospitals = explode(',',$request->hospital);
          $specializations = explode(',',$request->specialization);
+         $symptoms = explode(',',$request->symptoms);
+
 
 
         //  dd($hospitals);
@@ -142,6 +148,13 @@ class DoctorDetailsController extends BaseController
                     $specialObj->specialization_id = $specialization;
                     $specialObj->save();
                     }
+
+                    foreach($symptoms as $symptom){
+                        $symptomObj = new DoctorSymptom();
+                        $symptomObj->doctor_id = $doctor->id;
+                        $symptomObj->symptom_id = $symptom;
+                        $symptomObj->save();
+                        }
 
         }
     
@@ -236,4 +249,57 @@ class DoctorDetailsController extends BaseController
 
 
     }
+
+    public function filterBy(Request $request)
+    {
+      //  dd($request);
+
+        $cityID = $request->cityID;
+        $hospitalID = $request->hospitalID;
+        $specializationID = $request->specializationID;
+        $symptomID = $request->symptomID;
+
+        $where = [];
+        $cityID =  $request->cityID;
+        if ($cityID) $where[] = ['doctor_cities.city_id', '=',$cityID ];
+
+        $hospitalID = $request->hospitalID;
+
+        if ($hospitalID) $where[] = ['doctor_hospitals.hospital_id', '=',$hospitalID ];
+
+        $specializationID = $request->specializationID;
+        if ($specializationID) $where[] = ['doctor_specializations.specialization_id', '=',$specializationID ];
+
+        $symptomID = $request->symptomID;
+        if ($symptomID) $where[] = ['doctor_symptoms.symptom_id', '=',$symptomID ];
+        //dd($where);
+        $filter = Doctor::select(
+            'doctors.id',
+            'doctors.name',          
+            //'doctor_cities.doctor_id as doctorID' ,
+            'doctor_cities.city_id as cityID', 
+            'doctor_hospitals.hospital_id as hospitalID', 
+            'doctor_specializations.specialization_id as specializationID',
+            'doctor_symptoms.symptom_id as symptomID',       
+
+
+        )
+        ->join('doctor_cities','doctor_cities.doctor_id','=','doctors.id')
+        ->join('doctor_hospitals','doctor_hospitals.doctor_id','=','doctors.id')
+        ->join('doctor_specializations','doctor_specializations.doctor_id','=','doctors.id')
+        ->join('doctor_symptoms','doctor_symptoms.doctor_id','=','doctors.id')
+
+        ->where($where)
+        ->get();
+
+
+       
+       // $users = User::where($where)->get();
+
+       // dd($filter);
+        return $this->sendResponse(FilterDoctorResource::collection($filter), 'Lists.');
+
+    }
+
+
 }
