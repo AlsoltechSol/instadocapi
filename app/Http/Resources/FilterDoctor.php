@@ -20,6 +20,17 @@ class FilterDoctor extends JsonResource
         //'id' => $this->id,
         'doctorId' => $this->id,
         'name' => $this->name,
+
+        'yearsOfExperience' => $this->yearsOfExperience,
+        'education' => $this->education,
+        'language' => $this->language,
+        'fees' => $this->fees,
+        'doctor_registration_no' => $this->doctor_registration_no,
+        'image' => isset($this->image)? "/assets/patient/attachments/".$this->image:$this->image,
+        'about' => $this->about,
+        'treatment_type' => $this->treatment_type,
+        'user_id' => $this->user_id,
+
         'cityID' => $this->cityID,
         'hospitalID' => $this->hospitalID,
         'specializationID' => $this->specializationID,

@@ -275,7 +275,7 @@ class DoctorDetailsController extends BaseController
         //dd($where);
         $filter = Doctor::select(
             'doctors.id',
-            'doctors.name',          
+            'doctors.*',          
             //'doctor_cities.doctor_id as doctorID' ,
             'doctor_cities.city_id as cityID', 
             'doctor_hospitals.hospital_id as hospitalID', 
