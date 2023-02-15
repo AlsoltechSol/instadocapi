@@ -306,17 +306,20 @@ class DoctorDetailsController extends BaseController
         ->get();
 
 
-       
-       // $users = User::where($where)->get();
+        foreach($filter as $record){
+            
+            $record['slot']=$this->getSlots($record->id);
+        }
+        // return $filter;
+        // $users = User::where($where)->get();
 
-        dd($filter);
+        // return $filter;
         return $this->sendResponse(FilterDoctorResource::collection($filter), 'Lists.');
 
     }
 
     public function getSlots($id)
     {
-        $slotArray = [];
         $doctorSlot = Slot::select(
             'slots.*',
             'doctor_slot_selecteds.slot_id',
@@ -328,15 +331,38 @@ class DoctorDetailsController extends BaseController
         ->orderBy('slots.date')
         ->get();
 
-       // return $doctorSlot;
-         foreach($doctorSlot as $doctorSlots){
-           // dd($doctorSlots);
-            $slotArray["date"] = $doctorSlots->date;
-            $slotArray["start_time"] = $doctorSlots->start_time;
-            $slotArray["end_time"] = $doctorSlots->end_time;
+    //    return $doctorSlot;
+
+       $olddate = $doctorSlot[0]["date"];
+       $slotArray = [];
+       $allslots = [];
+       $i=1;
+
+         foreach($doctorSlot as $slot){
+            
+
+
+                if($slot["date"]==$olddate){
+                    array_push($allslots,$slot["start_time"]);
+                    $olddate = $slot["date"];
+
+                }
+                else{
+                    array_push($slotArray,[$olddate=>$allslots]);
+                    $allslots = [];
+                    array_push($allslots,$slot["start_time"]);
+                    $olddate = $slot["date"];
+                }
+                if($i == sizeof($doctorSlot)){
+                    // array_push($allslots,$slot["start_time"]);
+                    array_push($slotArray,[$slot["date"]=>$allslots]);
+                }
+                 $i++;
 
          }
+         
 
+        //  return $i;
 
             return $slotArray;
 

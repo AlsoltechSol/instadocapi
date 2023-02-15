@@ -35,6 +35,7 @@ class FilterDoctor extends JsonResource
         'hospitalID' => $this->hospitalID,
         'specializationID' => $this->specializationID,
         'symptomID' => $this->symptomID,
+        'slot' => $this->slot
        
     ];
     }
