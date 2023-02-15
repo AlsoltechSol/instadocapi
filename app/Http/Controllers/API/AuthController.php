@@ -44,7 +44,11 @@ class AuthController extends BaseController
             $user = User::create($input);
             $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;
             $success['name'] =  $user->name;
+            if($user->role == "patient"){
             $success['patient_details'] = $user->Patient;
+            }else{
+            $success['doctor_details'] = $user->Doctor;
+            }
             return $this->sendResponse($success, 'User created successfully.');
         }
         else{
@@ -57,7 +61,11 @@ class AuthController extends BaseController
             $success['token'] =  $authUser->createToken('MyAuthApp')->plainTextToken; 
             $success['name'] =  $authUser->name;
             $success['role'] =  $authUser->role;
-            $success['patient_details'] = $authUser->Patient;
+            if($authUser->role == "patient"){
+             $success['patient_details'] = $authUser->Patient;
+            }else{
+            $success['doctor_details'] = $authUser->Doctor;
+            }
 
             return $this->sendResponse($success, 'User signed in');
 

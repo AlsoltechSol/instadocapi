@@ -17,6 +17,8 @@ use App\Models\DoctorCity;
 use App\Models\DoctorHospital;
 use App\Models\DoctorSpecialization;
 use App\Models\DoctorSymptom;
+use App\Models\Slot;
+
 
 use App\Models\Appointment;
 use Carbon\Carbon;
@@ -272,33 +274,75 @@ class DoctorDetailsController extends BaseController
 
         $symptomID = $request->symptomID;
         if ($symptomID) $where[] = ['doctor_symptoms.symptom_id', '=',$symptomID ];
+
+
+        $tomorrow_date = Carbon::tomorrow(); 
+        $next_seven_date = Carbon::tomorrow()->addDays(7); 
+
         //dd($where);
         $filter = Doctor::select(
             'doctors.id',
-            'doctors.name',          
+            'doctors.*',          
             //'doctor_cities.doctor_id as doctorID' ,
             'doctor_cities.city_id as cityID', 
             'doctor_hospitals.hospital_id as hospitalID', 
             'doctor_specializations.specialization_id as specializationID',
-            'doctor_symptoms.symptom_id as symptomID',       
-
-
+            'doctor_symptoms.symptom_id as symptomID', 
+            'doctor_slot_selecteds.slot_id as slotID',       
+             'slots.date as slotDate ',
+             'slots.start_time as startTime ',       
+             'slots.end_time as endTime ',       
+             
         )
         ->join('doctor_cities','doctor_cities.doctor_id','=','doctors.id')
         ->join('doctor_hospitals','doctor_hospitals.doctor_id','=','doctors.id')
         ->join('doctor_specializations','doctor_specializations.doctor_id','=','doctors.id')
         ->join('doctor_symptoms','doctor_symptoms.doctor_id','=','doctors.id')
 
+        ->join('doctor_slot_selecteds','doctor_slot_selecteds.doctor_id','=','doctors.id')
+        ->join('slots','slots.id','=','doctor_slot_selecteds.slot_id')
         ->where($where)
+        ->whereBetween('slots.date',[$tomorrow_date,$next_seven_date])
         ->get();
 
 
        
        // $users = User::where($where)->get();
 
-       // dd($filter);
+        dd($filter);
         return $this->sendResponse(FilterDoctorResource::collection($filter), 'Lists.');
 
+    }
+
+    public function getSlots($id)
+    {
+        $slotArray = [];
+        $doctorSlot = Slot::select(
+            'slots.*',
+            'doctor_slot_selecteds.slot_id',
+            'doctor_slot_selecteds.doctor_id',
+
+        )
+        ->join('doctor_slot_selecteds','doctor_slot_selecteds.slot_id','=','slots.id')
+        ->where('doctor_slot_selecteds.doctor_id','=',$id)
+        ->orderBy('slots.date')
+        ->get();
+
+       // return $doctorSlot;
+         foreach($doctorSlot as $doctorSlots){
+           // dd($doctorSlots);
+            $slotArray["date"] = $doctorSlots->date;
+            $slotArray["start_time"] = $doctorSlots->start_time;
+            $slotArray["end_time"] = $doctorSlots->end_time;
+
+         }
+
+
+            return $slotArray;
+
+
+     //   dd($doctorSlot);
+        
     }
 
 
