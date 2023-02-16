@@ -71,6 +71,16 @@ class AuthController extends BaseController
             $doc_det['email']= $authUser->email;
             $doc_det['phone']= $authUser->mobile;
             $success['details'] = new DoctorResource($doc_det) ;
+
+
+            // app('App\Http\Controllers\DoctorDetailsController')->getSlots($doc_det->id);
+                $doc_det['slot'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSlots($doc_det->id);
+                $doc_det['hospitalID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getHospital($doc_det->id);
+                $doc_det['cityID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getCities($doc_det->id);
+                $doc_det['specializationID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSpecialization($doc_det->id);
+                $doc_det['symptomID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSymptoms($doc_det->id);
+
+        
             // $success['details'] = new DoctorResource($authUser->Doctor);
             }
 
