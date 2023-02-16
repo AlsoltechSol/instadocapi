@@ -58,6 +58,9 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/doctorAppointment-list', [App\Http\Controllers\API\DoctorDetailsController::class, 'appointmentList']);
     Route::post('/filterBy', [App\Http\Controllers\API\DoctorDetailsController::class, 'filterBy']);
     Route::get('/get-slots/{id}', [App\Http\Controllers\API\DoctorDetailsController::class, 'getSlots']);
+    Route::get('/get-cities/{id}', [App\Http\Controllers\API\DoctorDetailsController::class, 'getCities']);
+    Route::get('/get-hospital/{id}', [App\Http\Controllers\API\DoctorDetailsController::class, 'getHospital']);
+    Route::get('/get-specialization/{id}', [App\Http\Controllers\API\DoctorDetailsController::class, 'getSpecialization']);
 
 });
 

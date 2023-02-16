@@ -13,6 +13,8 @@ use App\Models\DoctorSpecialization;
 use App\Models\DoctorSymptom;
 use App\Models\Slot;
 use App\Models\User;
+use App\Models\City;
+use App\Models\Hospital;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -299,6 +301,7 @@ class DoctorDetailsController extends BaseController
 
         if(!count($doctorSlot)) return [];
         $olddate = $doctorSlot[0]["date"];
+        //dd($olddate);
         $slotArray = [];
         $allslots = [];
         $i = 1;
@@ -344,6 +347,64 @@ class DoctorDetailsController extends BaseController
         //     city_name:
         //     }
         // ]}
+
+            $getCity = City::select(
+                'cities.name',
+                'doctor_cities.city_id',
+                'doctor_cities.doctor_id',
+               
+            )
+            ->join('doctor_cities','doctor_cities.city_id','=','cities.id')
+            ->where('doctor_cities.doctor_id', '=', $doctor_id)
+            ->get();
+
+             if(!count($getCity)) return [];
+
+             $allcity = [];
+             $CityId = $getCity[0]["city_id"];
+           // dd($CityId);
+
+            //  foreach($getCity as $city){
+            //     array_push($allcity,$city["CityId"=>$CityId]);
+
+            //  }
+            return $allcity;
+
+
+
     }
+
+    public function getHospital($doctor_id){
+        $getHospital = Hospital::select(
+            'hospitals.name',
+            'doctor_hospitals.hospital_id',
+            'doctor_hospitals.doctor_id',
+           
+        )
+        ->join('doctor_hospitals','doctor_hospitals.hospital_id','=','hospitals.id')
+        ->where('doctor_hospitals.doctor_id', '=', $doctor_id)
+        ->get();
+
+        return $getHospital;
+
+    }
+
+    public function getSpecialization($doctor_id){
+        $getSpecialization = DoctorSpecialization::select(
+            
+            'doctor_specializations.specialization_id',
+            'doctor_specializations.doctor_id',
+            'specializations.name',
+
+           
+        )
+        ->join('specializations','specializations.id','=','doctor_specializations.specialization_id')
+        ->where('doctor_specializations.doctor_id', '=', $doctor_id)
+        ->get();
+
+        return $getSpecialization;
+
+    }
+
 
 }
