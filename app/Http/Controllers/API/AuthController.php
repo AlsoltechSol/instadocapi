@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\User;
 use App\Models\otp;
+use App\Http\Resources\Doctor as DoctorResource;
 
    
 class AuthController extends BaseController
@@ -36,7 +37,6 @@ class AuthController extends BaseController
             return $this->sendError('Error validation', $validator->errors());       
         }
         $user_exists = User::where('mobile',$request['mobile'])->first();
-        // dd($user_exists);
 
         if(!isset($user_exists))
         {
@@ -44,7 +44,14 @@ class AuthController extends BaseController
             $user = User::create($input);
             $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;
             $success['name'] =  $user->name;
-            $success['patient_details'] = $user->Patient;
+            if($user->role == "patient"){
+            $success['details'] = $user->Patient;
+            }else{
+            $doc_det=$user->Doctor;
+            $doc_det['email']= $user->email;
+            $doc_det['phone']= $user->mobile;
+            $success['details'] = new DoctorResource($doc_det) ;
+            }
             return $this->sendResponse($success, 'User created successfully.');
         }
         else{
@@ -57,7 +64,15 @@ class AuthController extends BaseController
             $success['token'] =  $authUser->createToken('MyAuthApp')->plainTextToken; 
             $success['name'] =  $authUser->name;
             $success['role'] =  $authUser->role;
-            $success['patient_details'] = $authUser->Patient;
+            if($authUser->role == "patient"){
+             $success['details'] = $authUser->Patient;
+            }else{
+            $doc_det=$authUser->Doctor;
+            $doc_det['email']= $authUser->email;
+            $doc_det['phone']= $authUser->mobile;
+            $success['details'] = new DoctorResource($doc_det) ;
+            // $success['details'] = new DoctorResource($authUser->Doctor);
+            }
 
             return $this->sendResponse($success, 'User signed in');
 
