@@ -63,5 +63,8 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('/get-specialization/{id}', [App\Http\Controllers\API\DoctorDetailsController::class, 'getSpecialization']);
     Route::get('/get-symptoms/{id}', [App\Http\Controllers\API\DoctorDetailsController::class, 'getSymptoms']);
 
+
+    Route::post('/prescription-details', [App\Http\Controllers\API\PrescriptionController::class, 'store']);
+
 });
 

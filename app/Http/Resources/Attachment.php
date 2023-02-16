@@ -17,7 +17,7 @@ class Attachment extends JsonResource
         return [
             'id' => $this->id,
             'document_type' => $this->document_type,
-            'document_file' => "/assets/patient/attachments/".$this->document_file,
+            'document_file' => "assets/patient/attachments/".$this->document_file,
             'user_id' => $this->user_id,
             'created_at' => $this->created_at->format('m/d/Y'),
             'updated_at' => $this->updated_at->format('m/d/Y'),

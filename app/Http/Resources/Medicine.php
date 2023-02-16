@@ -16,7 +16,7 @@ class Medicine extends JsonResource
     {
         return [
             'id' => $this->id,
-            'prescription' => "/assets/medicineorderuploads/prescription/".$this->prescription,
+            'prescription' => "assets/medicineorderuploads/prescription/".$this->prescription,
             'cost' => $this->cost,
             'due_date' => $this->due_date,
             'order_status' => $this->order_status,

@@ -133,7 +133,7 @@ class DoctorDetailsController extends BaseController
             }
 
         }
-
+      
         return $this->sendResponse(new DoctorResource($doctor), 'Doctor Details Added Successfully.');
 
     }
@@ -162,6 +162,13 @@ class DoctorDetailsController extends BaseController
         if (is_null($doctor)) {
             return $this->sendError('Doctor does not exist.');
         }
+
+        $doctor['slot'] = $this->getSlots($doctor->id);
+        $doctor['cityID'] = $this->getCities($doctor->id);
+        $doctor['hospitalID'] = $this->getHospital($doctor->id);
+        $doctor['specializationID'] = $this->getSpecialization($doctor->id);
+        $doctor['symptomID'] = $this->getSymptoms($doctor->id);
+
         return $this->sendResponse(new DoctorResource($doctor), 'Doctor Details fetched.');
     }
 
