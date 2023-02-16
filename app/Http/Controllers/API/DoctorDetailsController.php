@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use DB;
 
 class DoctorDetailsController extends BaseController
 {
@@ -273,10 +274,8 @@ class DoctorDetailsController extends BaseController
             // return $filter;
 
         foreach ($filter as $record) {
-
             $record['slot'] = $this->getSlots($record->id);
-
-            // dd($record);
+            $record['cityID'] = $this->getCities($record->id);
         }
 
         return $this->sendResponse(FilterDoctorResource::collection($filter), 'Lists.');
@@ -348,29 +347,12 @@ class DoctorDetailsController extends BaseController
         //     }
         // ]}
 
-            $getCity = City::select(
-                'cities.name',
-                'doctor_cities.city_id',
-                'doctor_cities.doctor_id',
-               
-            )
-            ->join('doctor_cities','doctor_cities.city_id','=','cities.id')
-            ->where('doctor_cities.doctor_id', '=', $doctor_id)
-            ->get();
-
-             if(!count($getCity)) return [];
-
-             $allcity = [];
-             $CityId = $getCity[0]["city_id"];
-           // dd($CityId);
-
-            //  foreach($getCity as $city){
-            //     array_push($allcity,$city["CityId"=>$CityId]);
-
-            //  }
-            return $allcity;
-
-
+        $di=DB::table('doctor_cities')
+        ->selectRaw('city_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('city_id')
+        ->toArray();
+        return $di;
 
     }
 
