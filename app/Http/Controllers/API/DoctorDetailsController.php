@@ -40,7 +40,9 @@ class DoctorDetailsController extends BaseController
         if (is_null($doctor)) {
             return $this->sendError('doctor details does not exist.');
         }
+
         return $this->sendResponse(DoctorResource::collection($doctor), 'doctor Lists.');
+
     }
 
     /**
@@ -50,7 +52,7 @@ class DoctorDetailsController extends BaseController
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -61,26 +63,7 @@ class DoctorDetailsController extends BaseController
      */
     public function store(Request $request)
     {
-
-        // return($request);
-
-//         name  -> name
-//         phone -> from user table
-//         email -> from user table
-// --      designation -> designation
-//         language -> language
-// --      city -> city_id
-// --      hospital -> hospital_id
-//         year of experience ->yearsOfExperience
-// --      doctor specialization -> specialization_id
-//         doctor education -> education
-//         doctor fees -> fees
-//         doctor registration no -> doctor_registration_no
-// --      treatment_type  -> treatment_type
-
         $input = $request->all();
-
-        //dd( $input);
         $validator = Validator::make($input, [
             'name' => 'required',
             'email' => 'required',
@@ -95,11 +78,9 @@ class DoctorDetailsController extends BaseController
         ]);
 
         unset($input["email"]);
-
         if ($validator->fails()) {
             return $this->sendError($validator->errors());
         }
-
         $id = auth()->user()->id;
         $input['user_id'] = $id;
         $user = auth()->user();
@@ -119,7 +100,6 @@ class DoctorDetailsController extends BaseController
         $specializations = explode(',', $request->specialization);
         $symptoms = explode(',', $request->symptoms);
 
-        //  dd($hospitals);
         if ($doctor) {
             foreach ($cities as $city) {
                 $cityObj = new DoctorCity();
@@ -279,77 +259,91 @@ class DoctorDetailsController extends BaseController
             'doctor_cities.city_id as cityID',
             'doctor_hospitals.hospital_id as hospitalID',
             'doctor_specializations.specialization_id as specializationID',
-            'doctor_symptoms.symptom_id as symptomID',
-            'doctor_slot_selecteds.slot_id as slotID',
-            'slots.date as slotDate ',
-            'slots.start_time as startTime ',
-            'slots.end_time as endTime ',
-
+            'doctor_symptoms.symptom_id as symptomID'
         )
             ->join('doctor_cities', 'doctor_cities.doctor_id', '=', 'doctors.id')
             ->join('doctor_hospitals', 'doctor_hospitals.doctor_id', '=', 'doctors.id')
             ->join('doctor_specializations', 'doctor_specializations.doctor_id', '=', 'doctors.id')
             ->join('doctor_symptoms', 'doctor_symptoms.doctor_id', '=', 'doctors.id')
-
-            ->join('doctor_slot_selecteds', 'doctor_slot_selecteds.doctor_id', '=', 'doctors.id')
-            ->join('slots', 'slots.id', '=', 'doctor_slot_selecteds.slot_id')
             ->where($where)
-            ->whereBetween('slots.date', [$tomorrow_date, $next_seven_date])
             ->get();
+
+            // return $filter;
 
         foreach ($filter as $record) {
 
             $record['slot'] = $this->getSlots($record->id);
+
+            // dd($record);
         }
 
         return $this->sendResponse(FilterDoctorResource::collection($filter), 'Lists.');
 
     }
 
-    public function getSlots($id)
+    public function getSlots($doctor_id)
     {
+
+        // apply the date filter
         $doctorSlot = Slot::select(
             'slots.*',
             'doctor_slot_selecteds.slot_id',
-            'doctor_slot_selecteds.doctor_id',
-
+            'doctor_slot_selecteds.doctor_id'
         )
             ->join('doctor_slot_selecteds', 'doctor_slot_selecteds.slot_id', '=', 'slots.id')
-            ->where('doctor_slot_selecteds.doctor_id', '=', $id)
+            ->where('doctor_slot_selecteds.doctor_id', '=', $doctor_id)
             ->orderBy('slots.date')
             ->get();
 
-        //    return $doctorSlot;
 
+
+        if(!count($doctorSlot)) return [];
         $olddate = $doctorSlot[0]["date"];
         $slotArray = [];
         $allslots = [];
         $i = 1;
-
         foreach ($doctorSlot as $slot) {
-
             if ($slot["date"] == $olddate) {
                 array_push($allslots, $slot["start_time"]);
                 $olddate = $slot["date"];
 
             } else {
-                array_push($slotArray, [$olddate => $allslots]);
+                array_push($slotArray, ["date"=>$olddate,"slots" => $allslots]);
                 $allslots = [];
                 array_push($allslots, $slot["start_time"]);
                 $olddate = $slot["date"];
             }
             if ($i == sizeof($doctorSlot)) {
-                // array_push($allslots,$slot["start_time"]);
-                array_push($slotArray, [$slot["date"] => $allslots]);
+                array_push($slotArray, ["date"=>$slot["date"] ,"slots"=> $allslots]);
             }
             $i++;
 
         }
-
         return $slotArray;
+    }
 
-        //   dd($doctorSlot);
+    public function getCities($doctor_id){
+     
+        // {
+        //  city_id:city_name,
+        //  city_id:city_name,
+        //  city_id:city_name,
+        // }
 
+        // {[
+        //     {
+        //     city_id:
+        //     city_name:
+        //     },
+        //     {
+        //     city_id:
+        //     city_name:
+        //     },
+        //     {
+        //     city_id:
+        //     city_name:
+        //     }
+        // ]}
     }
 
 }

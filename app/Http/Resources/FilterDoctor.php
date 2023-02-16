@@ -17,10 +17,9 @@ class FilterDoctor extends JsonResource
       //  return parent::toArray($request);
 
       return [
-        //'id' => $this->id,
-        'doctorId' => $this->id,
+        'id' => $this->id,
+        // 'doctorId' => $this->id,
         'name' => $this->name,
-
         'yearsOfExperience' => $this->yearsOfExperience,
         'education' => $this->education,
         'language' => $this->language,
@@ -30,11 +29,9 @@ class FilterDoctor extends JsonResource
         'about' => $this->about,
         'treatment_type' => $this->treatment_type,
         'user_id' => $this->user_id,
-
         'cityID' => $this->cityID,
         'hospitalID' => $this->hospitalID,
         'specializationID' => $this->specializationID,
-        'symptomID' => $this->symptomID,
         'slot' => $this->slot
        
     ];

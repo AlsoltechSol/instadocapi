@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\User;
 use App\Models\otp;
+use App\Http\Resources\Doctor as DoctorResource;
 
    
 class AuthController extends BaseController
@@ -36,7 +37,6 @@ class AuthController extends BaseController
             return $this->sendError('Error validation', $validator->errors());       
         }
         $user_exists = User::where('mobile',$request['mobile'])->first();
-        // dd($user_exists);
 
         if(!isset($user_exists))
         {
@@ -47,7 +47,10 @@ class AuthController extends BaseController
             if($user->role == "patient"){
             $success['details'] = $user->Patient;
             }else{
-            $success['details'] = $user->Doctor;
+            $doc_det=$user->Doctor;
+            $doc_det['email']= $user->email;
+            $doc_det['phone']= $user->mobile;
+            $success['details'] = new DoctorResource($doc_det) ;
             }
             return $this->sendResponse($success, 'User created successfully.');
         }
@@ -64,7 +67,11 @@ class AuthController extends BaseController
             if($authUser->role == "patient"){
              $success['details'] = $authUser->Patient;
             }else{
-            $success['details'] = $authUser->Doctor;
+            $doc_det=$authUser->Doctor;
+            $doc_det['email']= $authUser->email;
+            $doc_det['phone']= $authUser->mobile;
+            $success['details'] = new DoctorResource($doc_det) ;
+            // $success['details'] = new DoctorResource($authUser->Doctor);
             }
 
             return $this->sendResponse($success, 'User signed in');
