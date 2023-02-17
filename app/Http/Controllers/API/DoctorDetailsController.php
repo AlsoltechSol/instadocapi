@@ -13,10 +13,13 @@ use App\Models\DoctorSpecialization;
 use App\Models\DoctorSymptom;
 use App\Models\Slot;
 use App\Models\User;
+use App\Models\City;
+use App\Models\Hospital;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use DB;
 
 class DoctorDetailsController extends BaseController
 {
@@ -130,7 +133,7 @@ class DoctorDetailsController extends BaseController
             }
 
         }
-
+      
         return $this->sendResponse(new DoctorResource($doctor), 'Doctor Details Added Successfully.');
 
     }
@@ -159,6 +162,13 @@ class DoctorDetailsController extends BaseController
         if (is_null($doctor)) {
             return $this->sendError('Doctor does not exist.');
         }
+
+        $doctor['slot'] = $this->getSlots($doctor->id);
+        $doctor['cityID'] = $this->getCities($doctor->id);
+        $doctor['hospitalID'] = $this->getHospital($doctor->id);
+        $doctor['specializationID'] = $this->getSpecialization($doctor->id);
+        $doctor['symptomID'] = $this->getSymptoms($doctor->id);
+
         return $this->sendResponse(new DoctorResource($doctor), 'Doctor Details fetched.');
     }
 
@@ -271,13 +281,15 @@ class DoctorDetailsController extends BaseController
             // return $filter;
 
         foreach ($filter as $record) {
-
             $record['slot'] = $this->getSlots($record->id);
+            $record['cityID'] = $this->getCities($record->id);
+            $record['hospitalID'] = $this->getHospital($record->id);
+            $record['specializationID'] = $this->getSpecialization($record->id);
+            $record['symptomID'] = $this->getSymptoms($record->id);
 
-            // dd($record);
         }
 
-        return $this->sendResponse(FilterDoctorResource::collection($filter), 'Lists.');
+        return $this->sendResponse(DoctorResource::collection($filter), 'Lists.');
 
     }
 
@@ -299,6 +311,7 @@ class DoctorDetailsController extends BaseController
 
         if(!count($doctorSlot)) return [];
         $olddate = $doctorSlot[0]["date"];
+        //dd($olddate);
         $slotArray = [];
         $allslots = [];
         $i = 1;
@@ -324,26 +337,44 @@ class DoctorDetailsController extends BaseController
 
     public function getCities($doctor_id){
      
-        // {
-        //  city_id:city_name,
-        //  city_id:city_name,
-        //  city_id:city_name,
-        // }
+        $di=DB::table('doctor_cities')
+        ->selectRaw('city_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('city_id')
+        ->toArray();
+        return $di;
 
-        // {[
-        //     {
-        //     city_id:
-        //     city_name:
-        //     },
-        //     {
-        //     city_id:
-        //     city_name:
-        //     },
-        //     {
-        //     city_id:
-        //     city_name:
-        //     }
-        // ]}
     }
+
+    public function getHospital($doctor_id){
+        $hospital=DB::table('doctor_hospitals')
+        ->selectRaw('hospital_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('hospital_id')
+        ->toArray();
+        return $hospital;
+
+    }
+
+    public function getSpecialization($doctor_id){
+        $specialization=DB::table('doctor_specializations')
+        ->selectRaw('specialization_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('specialization_id')
+        ->toArray();
+        return $specialization;
+
+    }
+
+    public function getSymptoms($doctor_id){
+        $symptom=DB::table('doctor_symptoms')
+        ->selectRaw('symptom_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('symptom_id')
+        ->toArray();
+        return $symptom;
+
+    }
+
 
 }

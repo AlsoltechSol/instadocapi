@@ -24,11 +24,16 @@ class Doctor extends JsonResource
             'education' => $this->education,
             'fees' => $this->fees,
             'doctor_registration_no' => $this->doctor_registration_no,
-            'treatment_type' => $this->id,
-            'image' => isset($this->image)? "/assets/patient/attachments/".$this->image:$this->image,
+            'treatment_type' => $this->treatment_type,
+            'image' => isset($this->image)? "assets/patient/attachments/".$this->image:$this->image,
             'about' => $this->about,
             'user_id' => $this->user_id,
             'slot' => $this->slot,
+            'cityID' => $this->cityID,
+            'hospitalID' => $this->hospitalID,
+            'specializationID' => $this->specializationID,
+            'symptomID' => $this->symptomID,
+
             'created_at' => $this->created_at->format('m/d/Y'),
             'updated_at' => $this->updated_at->format('m/d/Y'),
         ];

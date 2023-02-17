@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Controllers\API\BaseController as BaseController;
+use Validator;
+use App\Models\Prescription;
+use App\Models\Prescriptionmedicines;
+
+
+
+class PrescriptionController extends BaseController
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+      // dd(json_decode($request->prescribed_medicine));
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'chief_complaints' => 'required',
+            'allergies' => 'required',
+            'diagnosis' => 'required',
+            'general_advice' => 'required',
+             'patient_id' => 'required',
+             'prescribed_medicine' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors());
+        }
+
+        $doctor_id = auth()->user()->id;
+        $input['doctor_id'] = $doctor_id;
+
+        $prescribed_medicine =  $request->prescribed_medicine;
+        $decode = json_decode($prescribed_medicine);
+       // dd($decode);
+        //exit();
+        unset($input["prescribed_medicine"]);
+        $prescription = Prescription::create($input);
+
+       
+       
+        if ($decode) {
+            foreach ($decode as $index=>$prescriptions) {
+                $prescribed_medicines = new Prescriptionmedicines();
+                $prescribed_medicines->prescription_medicine_name = $prescriptions['prescription_medicine_name'];
+                $prescribed_medicines->prescription_medicine_dosage = $prescriptions['prescription_medicine_dosage'];
+                $prescribed_medicines->prescription_medicine_freq = $prescriptions['prescription_medicine_freq'];
+                $prescribed_medicines->prescription_medicine_duration = $prescriptions['prescription_medicine_duration'];
+                $prescribed_medicines->prescription_medicine_instructions = $prescriptions['prescription_medicine_instructions'];
+                $prescribed_medicines->prescription_id = $prescription->id;
+
+                $prescribed_medicines->save();
+
+               // dd($prescriptions);
+            }
+
+        return $prescription;
+
+         }
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}
