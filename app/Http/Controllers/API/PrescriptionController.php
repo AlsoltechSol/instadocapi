@@ -41,7 +41,7 @@ class PrescriptionController extends BaseController
      */
     public function store(Request $request)
     {
-      // dd(json_decode($request->prescribed_medicine));
+     
         $input = $request->all();
         $validator = Validator::make($input, [
             'chief_complaints' => 'required',
@@ -58,10 +58,10 @@ class PrescriptionController extends BaseController
         }
 
         $doctor_id = auth()->user()->id;
-        $input['doctor_id'] = $doctor_id;
+        $input['doctor_user_id'] = $doctor_id;
 
         $prescribed_medicine =  $request->prescribed_medicine;
-        $decode = json_decode($prescribed_medicine);
+        $decode = json_decode($prescribed_medicine, true);
        // dd($decode);
         //exit();
         unset($input["prescribed_medicine"]);
@@ -74,17 +74,18 @@ class PrescriptionController extends BaseController
                 $prescribed_medicines = new Prescriptionmedicines();
                 $prescribed_medicines->prescription_medicine_name = $prescriptions['prescription_medicine_name'];
                 $prescribed_medicines->prescription_medicine_dosage = $prescriptions['prescription_medicine_dosage'];
-                $prescribed_medicines->prescription_medicine_freq = $prescriptions['prescription_medicine_freq'];
+                $prescribed_medicines->prescription_medicine_freq = $prescriptions['prescription_medicine_frequency'];
                 $prescribed_medicines->prescription_medicine_duration = $prescriptions['prescription_medicine_duration'];
                 $prescribed_medicines->prescription_medicine_instructions = $prescriptions['prescription_medicine_instructions'];
                 $prescribed_medicines->prescription_id = $prescription->id;
 
-                $prescribed_medicines->save();
+                 $prescribed_medicines->save();
 
                // dd($prescriptions);
             }
 
-        return $prescription;
+        // return $prescription;
+        return $this->sendResponse($prescription, 'Prescription added sucessfully');
 
          }
     }

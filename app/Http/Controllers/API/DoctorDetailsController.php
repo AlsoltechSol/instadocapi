@@ -229,7 +229,6 @@ class DoctorDetailsController extends BaseController
 
     public function filterBy(Request $request)
     {
-        //  dd($request);
 
         $cityID = $request->cityID;
         $hospitalID = $request->hospitalID;
@@ -262,21 +261,26 @@ class DoctorDetailsController extends BaseController
         $next_seven_date = Carbon::tomorrow()->addDays(7);
 
         //dd($where);
-        $filter = Doctor::select(
+        $doct_id = Doctor::select(
             'doctors.id',
-            'doctors.*',
-            //'doctor_cities.doctor_id as doctorID' ,
-            'doctor_cities.city_id as cityID',
-            'doctor_hospitals.hospital_id as hospitalID',
-            'doctor_specializations.specialization_id as specializationID',
-            'doctor_symptoms.symptom_id as symptomID'
+           
         )
             ->join('doctor_cities', 'doctor_cities.doctor_id', '=', 'doctors.id')
             ->join('doctor_hospitals', 'doctor_hospitals.doctor_id', '=', 'doctors.id')
             ->join('doctor_specializations', 'doctor_specializations.doctor_id', '=', 'doctors.id')
             ->join('doctor_symptoms', 'doctor_symptoms.doctor_id', '=', 'doctors.id')
             ->where($where)
-            ->get();
+            ->distinct()->pluck("doctors.id")
+            ->toArray();
+
+
+            $filter = Doctor::select(
+                'doctors.id',
+                'doctors.*',
+             
+            )
+                ->whereIn("id",$doct_id)
+                ->get();
 
             // return $filter;
 
