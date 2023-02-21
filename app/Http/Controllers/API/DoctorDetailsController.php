@@ -283,9 +283,13 @@ class DoctorDetailsController extends BaseController
         foreach ($filter as $record) {
             $record['slot'] = $this->getSlots($record->id);
             $record['cityID'] = $this->getCities($record->id);
+            $record['hospitalID'] = $this->getHospital($record->id);
+            $record['specializationID'] = $this->getSpecialization($record->id);
+            $record['symptomID'] = $this->getSymptoms($record->id);
+
         }
 
-        return $this->sendResponse(FilterDoctorResource::collection($filter), 'Lists.');
+        return $this->sendResponse(DoctorResource::collection($filter), 'Lists.');
 
     }
 
@@ -333,27 +337,6 @@ class DoctorDetailsController extends BaseController
 
     public function getCities($doctor_id){
      
-        // {
-        //  city_id:city_name,
-        //  city_id:city_name,
-        //  city_id:city_name,
-        // }
-
-        // {[
-        //     {
-        //     city_id:
-        //     city_name:
-        //     },
-        //     {
-        //     city_id:
-        //     city_name:
-        //     },
-        //     {
-        //     city_id:
-        //     city_name:
-        //     }
-        // ]}
-
         $di=DB::table('doctor_cities')
         ->selectRaw('city_id')
         ->where('doctor_id','=',$doctor_id)
@@ -364,34 +347,32 @@ class DoctorDetailsController extends BaseController
     }
 
     public function getHospital($doctor_id){
-        $getHospital = Hospital::select(
-            'hospitals.name',
-            'doctor_hospitals.hospital_id',
-            'doctor_hospitals.doctor_id',
-           
-        )
-        ->join('doctor_hospitals','doctor_hospitals.hospital_id','=','hospitals.id')
-        ->where('doctor_hospitals.doctor_id', '=', $doctor_id)
-        ->get();
-
-        return $getHospital;
+        $hospital=DB::table('doctor_hospitals')
+        ->selectRaw('hospital_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('hospital_id')
+        ->toArray();
+        return $hospital;
 
     }
 
     public function getSpecialization($doctor_id){
-        $getSpecialization = DoctorSpecialization::select(
-            
-            'doctor_specializations.specialization_id',
-            'doctor_specializations.doctor_id',
-            'specializations.name',
+        $specialization=DB::table('doctor_specializations')
+        ->selectRaw('specialization_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('specialization_id')
+        ->toArray();
+        return $specialization;
 
-           
-        )
-        ->join('specializations','specializations.id','=','doctor_specializations.specialization_id')
-        ->where('doctor_specializations.doctor_id', '=', $doctor_id)
-        ->get();
+    }
 
-        return $getSpecialization;
+    public function getSymptoms($doctor_id){
+        $symptom=DB::table('doctor_symptoms')
+        ->selectRaw('symptom_id')
+        ->where('doctor_id','=',$doctor_id)
+        ->distinct()->pluck('symptom_id')
+        ->toArray();
+        return $symptom;
 
     }
 
