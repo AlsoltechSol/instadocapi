@@ -59,7 +59,17 @@ class PatientController extends BaseController
 
         $id = auth()->user()->id;
         $input['user_id'] = $id;
+
+        
+        if ($request->hasFile('profile_photo')){
+            $fileName = time() . '_' . $request->file('profile_photo')->getClientOriginalName();
+            $filePath = str_replace('\\', '/', public_path("assets/patient-request/profile_photo/"));
+            $request->file('profile_photo')->move($filePath, $fileName);
+            $input['profile_photo'] = $fileName;
+        }
+
         $patient = Patient::create($input);
+
         return $this->sendResponse(new PatientResource($patient), 'Patient Details Added Successfully.');
     }
 
