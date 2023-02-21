@@ -205,20 +205,27 @@ class DoctorDetailsController extends BaseController
 
         $appointment_upcoming = Appointment::select(
             'appointments.*',
-            'doctors.name',
+            'patients.name',
+            'patients.profile_photo',
             'slots.date',
             'slots.start_time',
             'slots.end_time',
             'slots.weekday',
-
         )
             ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
             ->join('slots', 'slots.id', '=', 'appointments.slot_id')
-            ->orderBy('id', 'DESC')
+            ->join('patients', 'patients.user_id', '=', 'appointments.user_id')
+            ->orderBy('appointments.id', 'DESC')
             ->get();
+
+
+            return $appointment_upcoming;
+
         return $this->sendResponse(AppointmentResource::collection($appointment_upcoming), 'Upcoming Doctors Appointment Lists.');
 
     }
+
+
 
     public function filterBy(Request $request)
     {
@@ -306,13 +313,13 @@ class DoctorDetailsController extends BaseController
         $i = 1;
         foreach ($doctorSlot as $slot) {
             if ($slot["date"] == $olddate) {
-                array_push($allslots, $slot["start_time"]);
+                array_push($allslots, ["id"=>$slot["id"],"time" => $slot["start_time"]]);
                 $olddate = $slot["date"];
 
             } else {
                 array_push($slotArray, ["date"=>$olddate,"slots" => $allslots]);
                 $allslots = [];
-                array_push($allslots, $slot["start_time"]);
+                array_push($allslots, ["id"=>$slot["id"],"time" => $slot["start_time"]]);
                 $olddate = $slot["date"];
             }
             if ($i == sizeof($doctorSlot)) {

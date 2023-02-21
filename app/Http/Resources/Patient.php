@@ -23,6 +23,7 @@ class Patient extends JsonResource
             'email_id' => $this->email_id,
             'address' => $this->address,
             'user_id' => $this->user_id,
+            'profile_photo' => isset($this->profile_photo)? "assets/patient-request/profile_photo/".$this->profile_photo:$this->profile_photo,
             'created_at' => $this->created_at->format('m/d/Y'),
             'updated_at' => $this->updated_at->format('m/d/Y'),
         ];
