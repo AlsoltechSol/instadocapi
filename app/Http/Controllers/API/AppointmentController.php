@@ -5,6 +5,7 @@ use App\Http\Resources\Appointment as AppointmentResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
+use Validator;
 
 
 class AppointmentController extends BaseController
@@ -41,28 +42,26 @@ class AppointmentController extends BaseController
 
         // $request->hasFile('prescription');
         $input = $request->all();
-        // $validator = Validator::make($input, [
-        //     'test_name' => 'required',
-        //     'payment_mode' => 'required',
-        //     'date_of_test' => 'required',
-        //     'prescription_exists_flag' => 'required',
-        //     'prescription' => 'required',
-        // ]);
-        // if ($validator->fails()) {
-        //     return $this->sendError($validator->errors());
-        // }
+        $validator = Validator::make($input, [
+            'slot_id' => 'required',
+            'doctor_id' => 'required',
+            'prescription' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors());
+        }
 
         $id = auth()->user()->id;
         $input['user_id'] = $id;
-        // $input['order_status'] = 'Pending';
+        $input['appointment_status'] = 'Pending';
         $fileName = time() . '_' . $request->file('prescription')->getClientOriginalName();
-        $filePath = str_replace('\\', '/', public_path("assets/labtestsuploads/prescription/"));
+        $filePath = str_replace('\\', '/', public_path("assets/patient/attachments/"));
         $request->file('prescription')->move($filePath, $fileName);
         // $data['attachments']->name = time().'_'.$request->file->getClientOriginalName();
         $input['prescription'] =  $fileName;
         
-        $lab = Appointment::create($input);
-        return $this->sendResponse(new AppointmentResource($lab), 'Appointment Booked Successfully.');
+        $appointment = Appointment::create($input);
+        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment Booked Successfully.');
 
     }
 
