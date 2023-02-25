@@ -226,7 +226,7 @@ class DoctorDetailsController extends BaseController
             ->get();
 
 
-            return $appointment_upcoming;
+     
 
         return $this->sendResponse(AppointmentResource::collection($appointment_upcoming), 'Upcoming Doctors Appointment Lists.');
 
