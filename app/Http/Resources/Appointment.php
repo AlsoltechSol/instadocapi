@@ -32,6 +32,7 @@ class Appointment extends JsonResource
         'doctor_name' => $this->name,
         'user_id'=>$this->user_id,
         'prescribed_medicine' => 0,
+        'prescription' => $this->prescription,
         'profile_photo' => isset($this->profile_photo)? "assets/patient-request/profile_photo/".$this->profile_photo:$this->profile_photo,
     ];
     }
