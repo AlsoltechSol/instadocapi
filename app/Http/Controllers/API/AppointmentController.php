@@ -55,13 +55,15 @@ class AppointmentController extends BaseController
         $input['user_id'] = $id;
         $input['appointment_status'] = 'Pending';
         $fileName = time() . '_' . $request->file('prescription')->getClientOriginalName();
-        $filePath = str_replace('\\', '/', public_path("assets/patient/attachments/"));
+        $filePath = str_replace('\\', '/', public_path("assets/patient/appointment/prescription"));
         $request->file('prescription')->move($filePath, $fileName);
         // $data['attachments']->name = time().'_'.$request->file->getClientOriginalName();
         $input['prescription'] =  $fileName;
+       
         
-        $appointment = Appointment::create($input);
-        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment Booked Successfully.');
+         //return $input;
+        Appointment::create($input);
+        return $this->sendResponse(new AppointmentResource( Appointment::create($input)), 'Appointment Booked Successfully.');
 
     }
 
