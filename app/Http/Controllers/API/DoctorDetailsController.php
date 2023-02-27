@@ -225,10 +225,24 @@ class DoctorDetailsController extends BaseController
             ->orderBy('appointments.id', 'DESC')
             ->get();
 
+        $upcoming_cnt = 0;
+        $past_cnt = 0;
+        foreach($appointment_upcoming as $app){
+                if($app->date>$todayDate){
+                    $upcoming_cnt++;
+                }
+                else{
+                    $past_cnt++;
+                }
+        }
 
-     
+        
+        $apt['upcoming_count'] = $upcoming_cnt;
+        $apt['past_count'] = $past_cnt;
+        // $appointment['data'] = $appointment_upcoming;
 
-        return $this->sendResponse(AppointmentResource::collection($appointment_upcoming), 'Upcoming Doctors Appointment Lists.');
+        // return $appointment->upcoming_count;
+        return $this->sendResponse(AppointmentResource::collection($appointment_upcoming), 'Upcoming Doctors Appointment Lists.',$apt);
 
     }
 
