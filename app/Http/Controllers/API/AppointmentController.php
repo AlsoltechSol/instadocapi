@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 use App\Http\Resources\Appointment as AppointmentResource;
+use App\Http\Resources\Consultation as AppointmentConsultation;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
@@ -67,6 +69,34 @@ class AppointmentController extends BaseController
 
     }
 
+
+    public function appointmentConsultation()
+    {
+        $id = auth()->user()->id;
+        $appointment = Appointment::select(
+            'appointments.user_id',
+            'doctors.id as doctorID',
+            'doctors.name as doctorName',
+            'slots.date as slotDate',
+            'slots.weekday as slotWeekday',
+            'slots.start_time as slotTime',
+            'prescriptions.chief_complaints',
+            'prescriptions.allergies',
+            'prescriptions.diagnosis',
+            'prescriptions.general_advice',
+            'prescriptions.chief_complaints',
+            'appointments.prescription',
+              
+        )->leftjoin('doctors','doctors.id','=','appointments.doctor_id')
+        ->leftjoin('slots','slots.id','=','appointments.slot_id')
+        ->leftjoin('prescriptions','prescriptions.patient_id','=','appointments.user_id')
+     
+        ->where('appointments.user_id',$id)
+        ->get();
+        // return  $appointment;
+        return $this->sendResponse(AppointmentConsultation::collection($appointment), 'Appointment Consultation List.');
+       
+    }
     /**
      * Display the specified resource.
      *
