@@ -67,21 +67,16 @@ class AuthController extends BaseController
             if($authUser->role == "patient"){
              $success['details'] = $authUser->Patient;
             }else{
-            $doc_det=$authUser->Doctor;
+            $doc_det=$authUser;
             $doc_det['email']= $authUser->email;
             $doc_det['phone']= $authUser->mobile;
-            $success['details'] = new DoctorResource($doc_det) ;
-
-
-            // app('App\Http\Controllers\DoctorDetailsController')->getSlots($doc_det->id);
-                $doc_det['slot'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSlots($doc_det->id);
-                $doc_det['hospitalID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getHospital($doc_det->id);
-                $doc_det['cityID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getCities($doc_det->id);
-                $doc_det['specializationID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSpecialization($doc_det->id);
-                $doc_det['symptomID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSymptoms($doc_det->id);
-
-        
-            // $success['details'] = new DoctorResource($authUser->Doctor);
+            // $success['details'] = new DoctorResource($doc_det) ;
+            $doc_det['slot'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSlots($authUser->id);
+            $doc_det['hospitalID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getHospital($authUser->id);
+            $doc_det['cityID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getCities($authUser->id);
+            $doc_det['specializationID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSpecialization($authUser->id);
+            $doc_det['symptomID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSymptoms($authUser->id);
+            $success['details'] = new DoctorResource($doc_det);
             }
 
             return $this->sendResponse($success, 'User signed in');
