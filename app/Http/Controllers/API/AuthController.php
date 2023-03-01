@@ -77,7 +77,8 @@ class AuthController extends BaseController
             $doc_det['specializationID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSpecialization($authUser->id);
             $doc_det['symptomID'] = app('App\Http\Controllers\API\DoctorDetailsController')->getSymptoms($authUser->id);
             $success['details'] = new DoctorResource($doc_det);
-            }
+            
+        }
 
             return $this->sendResponse($success, 'User signed in');
 
