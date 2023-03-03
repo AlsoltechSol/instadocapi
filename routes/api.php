@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/prescription-details', [App\Http\Controllers\API\PrescriptionController::class, 'store']);
 
     Route::get('/appointment-consultation', [App\Http\Controllers\API\AppointmentController::class, 'appointmentConsultation']);
+    Route::get('/all-prescription/{id}', [App\Http\Controllers\API\AppointmentController::class, 'allPrescriptionMedicine']);
 
 
 });

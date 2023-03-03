@@ -7,6 +7,10 @@ use App\Http\Resources\Consultation as AppointmentConsultation;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
+use App\Models\Prescription;
+use App\Models\Doctor;
+
+
 use Validator;
 
 
@@ -77,24 +81,40 @@ class AppointmentController extends BaseController
             'appointments.user_id',
             'doctors.id as doctorID',
             'doctors.name as doctorName',
+            'doctors.image as doctorImage',
             'slots.date as slotDate',
             'slots.weekday as slotWeekday',
             'slots.start_time as slotTime',
+            'prescriptions.id as prescriptionID',
             'prescriptions.chief_complaints',
             'prescriptions.allergies',
             'prescriptions.diagnosis',
             'prescriptions.general_advice',
             'prescriptions.chief_complaints',
             'appointments.prescription',
-              
-        )->leftjoin('doctors','doctors.id','=','appointments.doctor_id')
+        )   
+        // )->leftjoin('doctors','doctors.id','=','appointments.doctor_id')
+     
         ->leftjoin('slots','slots.id','=','appointments.slot_id')
         ->leftjoin('prescriptions','prescriptions.patient_id','=','appointments.user_id')
+        ->leftjoin('doctors','doctors.id','=','prescriptions.doctor_user_id')
+        // ->leftjoin('prescriptionmedicines','prescriptionmedicines.prescription_id','=','prescriptions.id')
+    //    ->groupBy('doctorID','doctorName','doctorImage','slotDate','slotWeekday','slotTime')
      
         ->where('appointments.user_id',$id)
         ->get();
-        // return  $appointment;
-        return $this->sendResponse(AppointmentConsultation::collection($appointment), 'Appointment Consultation List.');
+
+     
+    //  return $appointment;
+        foreach($appointment as $appoint)
+        {
+            //  dd($appoint->prescriptionID);
+            $appoint['medicines'] = $this->allPrescriptionMedicine($appoint->prescriptionID);
+           
+        }
+
+        //  return  $appointment;
+       return $this->sendResponse(AppointmentConsultation::collection($appointment), 'Appointment Consultation List.');
        
     }
     /**
@@ -140,5 +160,27 @@ class AppointmentController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+
+    public function allPrescriptionMedicine($id)
+    {
+            $prescription_medicine = Prescription::select(
+                'prescriptions.id as prescriptionID ',
+                'prescriptionmedicines.id as medicineID',
+
+                'prescriptionmedicines.prescription_medicine_name',
+                'prescriptionmedicines.prescription_medicine_dosage',
+                'prescriptionmedicines.prescription_medicine_duration',
+                'prescriptionmedicines.prescription_medicine_instructions',
+                'prescriptionmedicines.prescription_medicine_freq',
+
+
+            )->leftjoin('prescriptionmedicines','prescriptionmedicines.prescription_id','=','prescriptions.id')
+            ->where('prescriptions.id','=',$id)
+            // ->distinct()->pluck('medicineID')
+            // ->toArray();
+                ->get();
+            return  $prescription_medicine ;
     }
 }
