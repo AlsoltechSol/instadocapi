@@ -48,10 +48,14 @@ class MedicineorderController extends BaseController
             $id = auth()->user()->id;
             $input['user_id'] = $id;
             $input['order_status'] = 'Pending';
+
+            if($request->hasFile('prescription')){
+
             $fileName = time() . '_' . $request->file('prescription')->getClientOriginalName();
             $filePath = str_replace('\\', '/', public_path("assets/medicineorderuploads/prescription/"));
             $request->file('prescription')->move($filePath, $fileName);
             $input['prescription'] =  $fileName;
+            }
             $medicine = Medicineorder::create($input);
             return $this->sendResponse(new MedicineResource($medicine), 'Medicine Order Added Successfully.');            
     }
