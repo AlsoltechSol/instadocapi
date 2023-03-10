@@ -19,6 +19,7 @@ class Consultation extends JsonResource
             // 'id' => $this->id,
             'doctor_id' => $this->doctorID,
             'doctor_name' => $this->doctorName,
+            'doctor_image' => isset($this->doctorImage)? "assets/patient/attachments/".$this->doctorImage:$this->doctorImage,
         
             'slot_date' => $this->slotDate,
           
@@ -32,7 +33,7 @@ class Consultation extends JsonResource
             'user_id'=>$this->user_id,
         
             'prescription' => isset($this->prescription)? "assets/patient/appointment/prescription/".$this->prescription:$this->prescription,
-        
+            'prescription_medicine' => $this->medicines,
         ];
     }
 }
