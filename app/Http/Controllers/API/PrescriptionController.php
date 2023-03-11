@@ -8,7 +8,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Validator;
 use App\Models\Prescription;
 use App\Models\Prescriptionmedicines;
-
+use PDF;
 
 
 class PrescriptionController extends BaseController
@@ -132,5 +132,39 @@ class PrescriptionController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+    public function prescriptionPdf($id)
+    {
+
+        $pres_pdf = Prescription::select(
+            'prescriptions.*',
+            'prescriptionmedicines.*',
+            'users.mobile'
+     
+        )->join('prescriptionmedicines','prescriptionmedicines.prescription_id','=','prescriptions.id')
+        ->join('users','users.id','=','prescriptions.doctor_user_id')
+        ->where('prescriptions.id','=',$id)
+        ->get();
+
+       // dd($pres_pdf);
+
+
+        $pdf = PDF::loadView('prescription_pdf',compact('pres_pdf'));
+
+        $filename = 'prescription' . '-' . time() . '.pdf';
+
+        $path = str_replace('\\', '/', public_path("assets/prescription/pdf/" . $filename));
+
+         return $pdf->download('pdf_file.pdf');
+       //  return $pdf;
+
+      $pdf->save($path);
+
+       return response()->json([
+           'message' => 'Pdf generated',
+           'path' => $filename
+       ]);
+
     }
 }

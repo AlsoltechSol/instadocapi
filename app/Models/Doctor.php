@@ -23,7 +23,7 @@ class Doctor extends Model
         'about'
     ];
 
-    public function User(){
-        return $this->belongsTo(User::class);
+    public function doc_details(){
+        return $this->belongsTo(User::class,'user_id');
     }
 }
